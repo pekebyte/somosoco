@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">somosOCO</string>
+    <string name="share">Compartir</string>
+    <string name="menu_home">Inicio</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="ocogram">El Canal de OCO</string>
+    <string name="fbgroup">Grupo de Facebook</string>
+</resources>
