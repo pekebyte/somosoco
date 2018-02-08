@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -36,6 +37,7 @@ import java.util.regex.Pattern;
 import okhttp3.CacheControl;
 import pekebyte.com.somosoco.Helpers.API;
 import pekebyte.com.somosoco.Helpers.Constants;
+import pekebyte.com.somosoco.Helpers.Database;
 import pekebyte.com.somosoco.Helpers.RestAdapter;
 import pekebyte.com.somosoco.Model.Item;
 import pekebyte.com.somosoco.Model.OcoPosts;
@@ -59,6 +61,8 @@ public class PostService extends Service {
 
     API api;
 
+    Database db;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -70,21 +74,26 @@ public class PostService extends Service {
         super.onCreate();
 
         api = RestAdapter.createAPI();
+        db = new Database();
 
-        if(mTimer!=null)
-            mTimer.cancel();
-        else
-            mTimer=new Timer(); // recreate new timer
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("pekebyte.com.somosoco", MODE_PRIVATE);
+        Boolean notificationsEnabled = sharedPreferences.getBoolean("notificationsEnabled",true);
+        if (notificationsEnabled == true) {
+            if (mTimer != null)
+                mTimer.cancel();
+            else
+                mTimer = new Timer(); // recreate new timer
 
 
-        mTimer.scheduleAtFixedRate(new TimerTask(){
+            mTimer.scheduleAtFixedRate(new TimerTask() {
 
-            @Override
-            public void run() {
-                Log.d("holi", "work");
-                retrievePosts();
-            }
-        },0,INTERVAL);// schedule task
+                @Override
+                public void run() {
+                    Log.d("holi", "work");
+                    retrievePosts();
+                }
+            }, 0, INTERVAL);// schedule task
+        }
     }
 
     private void retrievePosts(){
@@ -94,11 +103,9 @@ public class PostService extends Service {
             public void onResponse(Call<OcoPosts> call, Response<OcoPosts> response) {
                 if (response.isSuccessful()){
                     if (response.body().getItems().size() > 0){
-                        Log.d("First post", response.body().getItems().get(0).getTitle());
-                        Log.d("First post", ""+response.body().getItems().get(0).getId());
                         for (int i=0; i<response.body().getItems().size(); i++){
-                            if (!checkIfExists(response.body().getItems().get(i).getId())){
-                                insertPost(response.body().getItems().get(i));
+                            if (!db.checkIfExists(getApplicationContext(),response.body().getItems().get(i).getId())){
+                                db.insertPost(getApplicationContext(),response.body().getItems().get(i));
                                 notifyUser(response.body().getItems().get(i));
                             }
                         }
@@ -114,36 +121,6 @@ public class PostService extends Service {
                 Log.d("post retrieving failed",t.getMessage());
             }
         });
-    }
-
-    private Boolean checkIfExists(Long id){
-        SQLiteDatabase ocoDB = getApplicationContext().openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
-        String rawSQL = "SELECT * FROM ocoposts WHERE id="+id;
-        Cursor c = ocoDB.rawQuery(rawSQL, null);
-        Boolean response = false;
-        if (c.getCount() > 0){
-            response = true;
-        }
-        ocoDB.close();
-        return response;
-    }
-
-
-
-    private void insertPost(Item post){
-        SQLiteDatabase ocoDB = getApplicationContext().openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
-        Gson gson = new Gson();
-        String json = gson.toJson(post);
-        String sql = "INSERT INTO ocoposts (id, item) VALUES (?, ?)";
-        SQLiteStatement statement = ocoDB.compileStatement(sql);
-
-        statement.bindString(1, ""+post.getId());
-        statement.bindString(2, json);
-
-        statement.execute();
-        statement.close();
-
-        ocoDB.close();
     }
 
     private void notifyUser(final Item item){

@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,6 +22,7 @@ import java.util.ArrayList;
 import pekebyte.com.somosoco.Adapters.PostAdapter;
 import pekebyte.com.somosoco.Helpers.API;
 import pekebyte.com.somosoco.Helpers.Constants;
+import pekebyte.com.somosoco.Helpers.Database;
 import pekebyte.com.somosoco.Helpers.RestAdapter;
 import pekebyte.com.somosoco.Model.Item;
 import pekebyte.com.somosoco.Model.OcoPosts;
@@ -45,6 +44,9 @@ public class HomeFragment extends Fragment {
     ProgressBar progressBar;
 
     SharedPreferences sharedPreferences;
+
+    Database db;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -74,7 +76,8 @@ public class HomeFragment extends Fragment {
         lv.setDivider(null);
 
         sharedPreferences = mContext.getSharedPreferences("pekebyte.com.somosoco", MODE_PRIVATE);
-        createDB();
+        db = new Database();
+        db.createDB(mContext);
 
 
         api = RestAdapter.createAPI();
@@ -87,7 +90,7 @@ public class HomeFragment extends Fragment {
         progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
 
         getAllPosts();
-        retrievePosts();
+        retrievePosts(true);
         //Start Background service
         Intent service = new Intent(mContext, PostService.class);
         mContext.startService(service);
@@ -102,7 +105,7 @@ public class HomeFragment extends Fragment {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (view.getAdapter().getCount() > 0){
                     if (view.getLastVisiblePosition() == view.getAdapter().getCount() - 1 && view.getChildAt(view.getChildCount() - 1).getBottom() <= view.getHeight()) {
-                        retrievePosts();
+                        retrievePosts(false);
                     }
                 }
             }
@@ -124,8 +127,8 @@ public class HomeFragment extends Fragment {
                             if (response.body().getItems().size() > 0){
                                 for (int i=0; i<response.body().getItems().size(); i++){
                                     Item item = response.body().getItems().get(i);
-                                    if (!checkIfExists(response.body().getItems().get(i).getId())){
-                                        insertPost(response.body().getItems().get(i));
+                                    if (!db.checkIfExists(mContext,response.body().getItems().get(i).getId())){
+                                        db.insertPost(mContext,response.body().getItems().get(i));
                                     }
                                 }
                                 getAllPosts();
@@ -146,18 +149,23 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void retrievePosts(){
-        Call<OcoPosts> callbackCall = api.getPosts(Constants.BLOGGER_KEY, token);
-
+    private void retrievePosts(Boolean checkLatests){
+        Call<OcoPosts> callbackCall = null;
+        if (checkLatests == false) {
+            callbackCall = api.getPosts(Constants.BLOGGER_KEY, token);
+        }
+        else{
+            callbackCall = api.getPosts(Constants.BLOGGER_KEY, null);
+        }
         callbackCall.enqueue(new Callback<OcoPosts>() {
             @Override
             public void onResponse(Call<OcoPosts> call, Response<OcoPosts> response) {
                 if (response.isSuccessful()){
                     if (response.body().getItems().size() > 0){
                         for (int i=0; i<response.body().getItems().size(); i++){
-                            if (!checkIfExists(response.body().getItems().get(i).getId())){
+                            if (!db.checkIfExists(mContext,response.body().getItems().get(i).getId())){
                                 postList.add(response.body().getItems().get(i));
-                                insertPost(response.body().getItems().get(i));
+                                db.insertPost(mContext,response.body().getItems().get(i));
                             }
                         }
                         token = response.body().getNextPageToken();
@@ -179,23 +187,8 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void createDB(){
-        SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
-        ocoDB.execSQL("CREATE TABLE IF NOT EXISTS ocoposts (id VARCHAR, item TEXT)");
-        ocoDB.close();
-    }
 
-    private Boolean checkIfExists(Long id){
-        SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
-        String rawSQL = "SELECT * FROM ocoposts WHERE id="+id;
-        Cursor c = ocoDB.rawQuery(rawSQL, null);
-        Boolean response = false;
-        if (c.getCount() > 0){
-            response = true;
-        }
-        ocoDB.close();
-        return response;
-    }
+
 
     private void getAllPosts(){
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
@@ -215,21 +208,5 @@ public class HomeFragment extends Fragment {
         if (postList.size() > 0){
             progressBar.setVisibility(View.GONE);
         }
-    }
-
-    private void insertPost(Item post){
-        SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
-        Gson gson = new Gson();
-        String json = gson.toJson(post);
-        String sql = "INSERT INTO ocoposts (id, item) VALUES (?, ?)";
-        SQLiteStatement statement = ocoDB.compileStatement(sql);
-
-        statement.bindString(1, ""+post.getId());
-        statement.bindString(2, json);
-
-        statement.execute();
-        statement.close();
-
-        ocoDB.close();
     }
 }

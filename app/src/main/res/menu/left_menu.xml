@@ -4,17 +4,26 @@
         <item
             android:id="@+id/left_item_home"
             android:icon="@drawable/ic_home_black_24dp"
-            android:title="@string/menu_home"
-            android:checked="true"/>
+            android:title="@string/menu_home"/>
         <item
             android:id="@+id/left_item_telegram"
             android:icon="@drawable/telegram"
-            android:title="@string/ocogram"
-            android:checked="true"/>
+            android:title="@string/ocogram"/>
         <item
             android:id="@+id/left_item_facebook"
             android:icon="@drawable/fb"
-            android:title="@string/fbgroup"
-            android:checked="true"/>
+            android:title="@string/fbgroup"/>
+        <item
+            android:id="@+id/left_item_youtube"
+            android:icon="@drawable/youtube"
+            android:title="@string/youtube"/>
+        <item
+            android:id="@+id/left_item_mail"
+            android:icon="@drawable/envelope"
+            android:title="@string/ocomail"/>
+        <item
+            android:id="@+id/left_item_settings"
+            android:icon="@drawable/controls"
+            android:title="@string/settings"/>
     </group>
 </menu>

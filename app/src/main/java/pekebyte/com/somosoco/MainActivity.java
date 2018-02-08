@@ -3,9 +3,11 @@ package pekebyte.com.somosoco;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+
+import de.cketti.mailto.EmailIntentBuilder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.left_item_home:
                         frag = HomeFragment.newInstance();
                         setFragment(frag);
+                        getSupportActionBar().setTitle(R.string.app_name);
+                        drawer.closeDrawers();
                         return true;
                     case R.id.left_item_telegram:
                         Intent telegram = null;
@@ -58,9 +64,7 @@ public class MainActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             telegram = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/somosoco"));
                         }
-//                        Intent telegram = new Intent(Intent.ACTION_VIEW);
-//                        telegram.setData(Uri.parse("https://t.me/somosoco"));
-//                        telegram.setPackage("org.telegram.messenger");
+//                        Intent telegram = new Intent(Intent.ACTION_VIE
                         startActivity(telegram);
                         return false;
                     case R.id.left_item_facebook:
@@ -73,6 +77,24 @@ public class MainActivity extends AppCompatActivity {
                         }
                         startActivity(facebook);
                         return false;
+                    case R.id.left_item_youtube:
+                        Intent youtube = null;
+                        youtube = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/channel/UCwgJ0FER4wBvlehiQmdSWEA"));
+                        startActivity(youtube);
+                        return false;
+                    case R.id.left_item_mail:
+                        Intent emailIntent = EmailIntentBuilder.from(getApplicationContext())
+                                .to("elmaildeoco@gmail.com")
+                                .subject("Mail desde la app de OCO")
+                                .build();
+                        startActivity(emailIntent);
+                        return false;
+                    case R.id.left_item_settings:
+                        frag = SettingsFragment.newInstance();
+                        setFragment(frag);
+                        getSupportActionBar().setTitle(R.string.settings);
+                        drawer.closeDrawers();
+                        return true;
                 }
                 drawer.closeDrawers();
                 return true;

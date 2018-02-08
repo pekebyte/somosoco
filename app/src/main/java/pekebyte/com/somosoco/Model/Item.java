@@ -14,7 +14,7 @@ public class Item {
     private String kind;
     @SerializedName("id")
     @Expose
-    private Long id;
+    private String id;
     @SerializedName("blog")
     @Expose
     private Blog blog;
@@ -54,11 +54,11 @@ public class Item {
         this.kind = kind;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -6,4 +6,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="ocogram">El Canal de OCO</string>
     <string name="fbgroup">Grupo de Facebook</string>
+    <string name="youtube">somosOCO en Youtube</string>
+    <string name="ocomail">el mail de OCO</string>
+    <string name="settings">Ajustes</string>
+    <string name="enable_notifications">Habilitar Notificaciones</string>
 </resources>
