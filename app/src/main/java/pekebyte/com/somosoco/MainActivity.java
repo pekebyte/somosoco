@@ -1,6 +1,7 @@
 package pekebyte.com.somosoco;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.Settings;
@@ -13,10 +14,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.TypefaceSpan;
 import android.view.MenuItem;
 import android.view.View;
 
 import de.cketti.mailto.EmailIntentBuilder;
+import pekebyte.com.somosoco.Helpers.CustomTypefaceSpan;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.left_item_home:
                         frag = HomeFragment.newInstance();
                         setFragment(frag);
-                        getSupportActionBar().setTitle(R.string.app_name);
+                        setActionBarTitle(getString(R.string.app_name));
                         drawer.closeDrawers();
                         return true;
                     case R.id.left_item_telegram:
@@ -92,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.left_item_settings:
                         frag = SettingsFragment.newInstance();
                         setFragment(frag);
-                        getSupportActionBar().setTitle(R.string.settings);
+                        setActionBarTitle(getString(R.string.settings));
                         drawer.closeDrawers();
                         return true;
                 }
@@ -117,6 +124,13 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.content_frame, fragment, fragment.getTag());
         t.commit();
+    }
+
+    private void setActionBarTitle(String title){
+        Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/GillSansUltraBold.ttf");
+        SpannableStringBuilder ssb = new SpannableStringBuilder(title);
+        ssb.setSpan(new CustomTypefaceSpan("", font), 0, title.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        getSupportActionBar().setTitle(ssb);
     }
 
 }

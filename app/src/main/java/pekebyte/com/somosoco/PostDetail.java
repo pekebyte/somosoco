@@ -3,11 +3,17 @@ package pekebyte.com.somosoco;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.TypefaceSpan;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +24,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import pekebyte.com.somosoco.Helpers.CustomTypefaceSpan;
 import pekebyte.com.somosoco.Model.Item;
 
 public class PostDetail extends AppCompatActivity {
@@ -38,7 +45,7 @@ public class PostDetail extends AppCompatActivity {
         item = gson.fromJson(json, Item.class);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(item.getTitle());
+        setActionBarTitle(item.getTitle());
 
         WebView wv = (WebView) findViewById(R.id.wv);
         wv.setVerticalScrollBarEnabled(true);
@@ -110,6 +117,13 @@ public class PostDetail extends AppCompatActivity {
         i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
         i.putExtra(Intent.EXTRA_TEXT, item.getUrl());
         return i;
+    }
+
+    private void setActionBarTitle(String title){
+        Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/GillSansUltraBold.ttf");
+        SpannableStringBuilder ssb = new SpannableStringBuilder(title);
+        ssb.setSpan(new CustomTypefaceSpan("", font), 0, title.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        getSupportActionBar().setTitle(ssb);
     }
 
 }

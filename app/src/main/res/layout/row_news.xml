@@ -27,7 +27,7 @@
                     android:id="@+id/postimage"
                     android:layout_width="match_parent"
                     android:layout_height="150dp" />
-                <TextView
+                <pekebyte.com.somosoco.Helpers.OcoFont
                     android:id="@+id/NoticiaTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
