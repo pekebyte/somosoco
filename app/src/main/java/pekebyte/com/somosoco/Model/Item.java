@@ -7,6 +7,9 @@ package pekebyte.com.somosoco.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+
 public class Item {
 
     @SerializedName("kind")
@@ -20,7 +23,7 @@ public class Item {
     private Blog blog;
     @SerializedName("published")
     @Expose
-    private String published;
+    private Timestamp published;
     @SerializedName("updated")
     @Expose
     private String updated;
@@ -70,11 +73,11 @@ public class Item {
         this.blog = blog;
     }
 
-    public String getPublished() {
+    public Timestamp getPublished() {
         return published;
     }
 
-    public void setPublished(String published) {
+    public void setPublished(Timestamp published) {
         this.published = published;
     }
 

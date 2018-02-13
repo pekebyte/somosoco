@@ -20,14 +20,16 @@ public class Database {
 
     public void createDB(Context mContext){
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
-        ocoDB.execSQL("CREATE TABLE IF NOT EXISTS ocoposts (id VARCHAR, item TEXT)");
+        ocoDB.execSQL("CREATE TABLE IF NOT EXISTS ocoposts (published DATETIME, item TEXT)");
         ocoDB.close();
     }
 
-    public Boolean checkIfExists(Context mContext,String id){
+    public Boolean checkIfExists(Context mContext,Item post){
+        Gson gson = new Gson();
+        String json = gson.toJson(post);
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
-        String rawSQL = "SELECT * FROM ocoposts WHERE id='"+id+"'";
-        Cursor c = ocoDB.rawQuery(rawSQL, null);
+        String rawSQL = "SELECT * FROM ocoposts WHERE item= ?";
+        Cursor c = ocoDB.rawQuery(rawSQL, new String[]{json});
         Boolean response = false;
         if (c.getCount() > 0){
             response = true;
@@ -40,10 +42,10 @@ public class Database {
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
         Gson gson = new Gson();
         String json = gson.toJson(post);
-        String sql = "INSERT INTO ocoposts (id, item) VALUES (?, ?)";
+        String sql = "INSERT INTO ocoposts (published, item) VALUES (?, ?)";
         SQLiteStatement statement = ocoDB.compileStatement(sql);
 
-        statement.bindString(1, post.getId());
+        statement.bindString(1, post.getPublished().toString());
         statement.bindString(2, json);
 
         statement.execute();

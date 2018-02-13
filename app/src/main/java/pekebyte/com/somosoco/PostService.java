@@ -104,7 +104,7 @@ public class PostService extends Service {
                 if (response.isSuccessful()){
                     if (response.body().getItems().size() > 0){
                         for (int i=0; i<response.body().getItems().size(); i++){
-                            if (!db.checkIfExists(getApplicationContext(),response.body().getItems().get(i).getId())){
+                            if (!db.checkIfExists(getApplicationContext(),response.body().getItems().get(i))){
                                 db.insertPost(getApplicationContext(),response.body().getItems().get(i));
                                 notifyUser(response.body().getItems().get(i));
                             }
@@ -126,69 +126,27 @@ public class PostService extends Service {
     private void notifyUser(final Item item){
         Log.d("aitana war", "lo malo");
         final Context ctx = getApplicationContext();
-        Picasso.with(this)
-                .load(extractUrls(item.getContent()))
-                .resize(50,50)
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        Log.d("AQUI JUE", "ES LA NOTIJICACION BITCHO");
-                        NotificationManager notificationManager = (NotificationManager) ctx
+        NotificationManager notificationManager = (NotificationManager) ctx
                                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
-                        Intent intent = new Intent(ctx, PostDetail.class);
-                        Gson gson = new Gson();
-                        intent.putExtra("item", gson.toJson(item));
+        Intent intent = new Intent(ctx, PostDetail.class);
+        Gson gson = new Gson();
+        intent.putExtra("item", gson.toJson(item));
 
-                        PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-                        Notification notification = new Notification.Builder(ctx)
-                                .setContentTitle(
-                                        ctx.getResources().getString(R.string.app_name))
-                                .setContentText(item.getTitle())
-                                .setSmallIcon(R.drawable.ic_stat_onesignal_default)
-                                .setLargeIcon(bitmap).build();
-
-                        // hide the notification after its selected
-                        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-                        notification.contentIntent = pIntent;
-                        notificationManager.notify(1, notification);
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-                        NotificationManager notificationManager = (NotificationManager) ctx
-                                .getSystemService(Context.NOTIFICATION_SERVICE);
-
-                        Intent intent = new Intent(ctx, PostDetail.class);
-                        Gson gson = new Gson();
-                        intent.putExtra("item", gson.toJson(item));
-
-                        PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-                        Notification notification = new Notification.Builder(ctx)
-                                .setContentTitle(
-                                        ctx.getResources().getString(R.string.app_name))
-                                .setContentText(item.getTitle())
-                                .setSmallIcon(R.drawable.ic_stat_onesignal_default)
-                                .build();
+        Notification notification = new Notification.Builder(ctx)
+                .setContentTitle(ctx.getResources().getString(R.string.app_name))
+                .setContentText(item.getTitle())
+                .setSmallIcon(R.drawable.ic_stat_onesignal_default)
+                .build();
 
-                        // hide the notification after its selected
-                        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        // hide the notification after its selected
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
-                        notification.contentIntent = pIntent;
-
-                        notificationManager.notify(1, notification);
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                    }
-                });
+         notification.contentIntent = pIntent;
+         notificationManager.notify(1, notification);
 
     }
 

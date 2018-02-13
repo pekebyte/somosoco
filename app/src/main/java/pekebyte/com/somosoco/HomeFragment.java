@@ -127,7 +127,7 @@ public class HomeFragment extends Fragment {
                             if (response.body().getItems().size() > 0){
                                 for (int i=0; i<response.body().getItems().size(); i++){
                                     Item item = response.body().getItems().get(i);
-                                    if (!db.checkIfExists(mContext,response.body().getItems().get(i).getId())){
+                                    if (!db.checkIfExists(mContext,response.body().getItems().get(i))){
                                         db.insertPost(mContext,response.body().getItems().get(i));
                                     }
                                 }
@@ -163,7 +163,7 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful()){
                     if (response.body().getItems().size() > 0){
                         for (int i=0; i<response.body().getItems().size(); i++){
-                            if (!db.checkIfExists(mContext,response.body().getItems().get(i).getId())){
+                            if (!db.checkIfExists(mContext,response.body().getItems().get(i))){
                                 postList.add(response.body().getItems().get(i));
                                 db.insertPost(mContext,response.body().getItems().get(i));
                             }
@@ -192,7 +192,7 @@ public class HomeFragment extends Fragment {
 
     private void getAllPosts(){
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
-        Cursor c = ocoDB.rawQuery("SELECT * FROM ocoposts", null);
+        Cursor c = ocoDB.rawQuery("SELECT * FROM ocoposts ORDER BY published DESC", null);
         int itemIndex = c.getColumnIndex("item");
         Gson gson = new Gson();
         c.moveToFirst();

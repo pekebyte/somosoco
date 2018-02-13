@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,8 @@ public class PostAdapter extends ArrayAdapter<Item> {
 
         holder.image = (ImageView) convertView.findViewById(R.id.postimage);
 
+        holder.content = (CardView) convertView.findViewById(R.id.card_view);
+
         String postImage = extractUrls(item.getContent());
 
         if (postImage != null){
@@ -72,7 +75,7 @@ public class PostAdapter extends ArrayAdapter<Item> {
             }
         };
 
-        holder.image.setOnClickListener(listener);
+        holder.content.setOnClickListener(listener);
 
         return convertView;
     }
@@ -80,6 +83,7 @@ public class PostAdapter extends ArrayAdapter<Item> {
     public static class ViewHolder{
         TextView title;
         ImageView image;
+        CardView content;
     }
 
     public String extractUrls(String input) {
