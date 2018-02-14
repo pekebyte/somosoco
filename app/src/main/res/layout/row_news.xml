@@ -23,10 +23,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/postimage"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp" />
+                    android:layout_height="150dp">
+                    <ImageView
+                        android:id="@+id/postimage"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp" />
+
+                    <ImageView
+                        android:id="@+id/favorite"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_margin="10dp"
+                        android:layout_alignParentEnd="true"
+                        card_view:srcCompat="@drawable/star2" />
+                </RelativeLayout>
+
                 <pekebyte.com.somosoco.Helpers.OcoFont
                     android:id="@+id/NoticiaTitle"
                     android:layout_width="wrap_content"

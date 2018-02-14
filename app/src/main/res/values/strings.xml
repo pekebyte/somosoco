@@ -2,6 +2,7 @@
     <string name="app_name">somosOCO</string>
     <string name="share">Compartir</string>
     <string name="menu_home">Inicio</string>
+    <string name="menu_favorites">Favoritos</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="ocogram">El Canal de OCO</string>
@@ -10,4 +11,7 @@
     <string name="ocomail">el mail de OCO</string>
     <string name="settings">Ajustes</string>
     <string name="enable_notifications">Habilitar Notificaciones</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

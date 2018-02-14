@@ -63,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
                         setActionBarTitle(getString(R.string.app_name));
                         drawer.closeDrawers();
                         return true;
+                    case R.id.left_item_favorites:
+                        frag = SavedFragment.newInstance();
+                        setFragment(frag);
+                        setActionBarTitle(getString(R.string.menu_favorites));
+                        drawer.closeDrawers();
+                        return true;
                     case R.id.left_item_telegram:
                         Intent telegram = null;
                         try {
@@ -114,11 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-//    private void initActionBar(){
-//        Drawable d=getResources().getDrawable(R.drawable.actionbarbg2);
-//        getSupportActionBar().setBackgroundDrawable(d);
-//    }
 
     protected void setFragment(Fragment fragment) {
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();

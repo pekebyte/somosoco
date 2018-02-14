@@ -6,6 +6,10 @@
             android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/menu_home"/>
         <item
+            android:id="@+id/left_item_favorites"
+            android:icon="@drawable/star"
+            android:title="@string/menu_favorites"/>
+        <item
             android:id="@+id/left_item_facebook"
             android:icon="@drawable/fb"
             android:title="@string/fbgroup"/>

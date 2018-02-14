@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import pekebyte.com.somosoco.Helpers.Database;
 import pekebyte.com.somosoco.Model.Item;
 import pekebyte.com.somosoco.PostDetail;
 import pekebyte.com.somosoco.R;
@@ -27,17 +28,19 @@ import pekebyte.com.somosoco.R;
 public class PostAdapter extends ArrayAdapter<Item> {
     private Context mContext;
     private LayoutInflater mInflater;
+    private Boolean isHome;
 
-    public PostAdapter(@NonNull Context context,List<Item> items) {
+    public PostAdapter(@NonNull Context context,List<Item> items, Boolean isHome) {
         super(context, R.layout.row_news, items);
         mContext = context;
         mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.isHome = isHome;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         final ViewHolder holder;
 
@@ -55,6 +58,9 @@ public class PostAdapter extends ArrayAdapter<Item> {
 
         holder.content = (CardView) convertView.findViewById(R.id.card_view);
 
+        //Favorite Button
+        holder.favoriteButton = (ImageView) convertView.findViewById(R.id.favorite);
+
         String postImage = extractUrls(item.getContent());
 
         if (postImage != null){
@@ -62,6 +68,7 @@ public class PostAdapter extends ArrayAdapter<Item> {
         }
         else{
             holder.image.setVisibility(View.GONE);
+            holder.favoriteButton.setVisibility(View.GONE);
         }
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -77,12 +84,43 @@ public class PostAdapter extends ArrayAdapter<Item> {
 
         holder.content.setOnClickListener(listener);
 
+        //Favorite Button
+        final Database db = new Database();
+
+        View.OnClickListener fl = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (db.isFavorite(mContext,item)){
+                    holder.favoriteButton.setImageResource(R.drawable.star2);
+                    db.makeFavorite(mContext,item,0);
+                }
+                else{
+                    holder.favoriteButton.setImageResource(R.drawable.star);
+                    db.makeFavorite(mContext,item,1);
+                }
+                if (!isHome){
+                    remove(item);
+                    notifyDataSetChanged();
+                }
+            }
+        };
+        if (db.isFavorite(mContext,item)){
+            holder.favoriteButton.setImageResource(R.drawable.star);
+
+        }
+        else{
+            holder.favoriteButton.setImageResource(R.drawable.star2);
+        }
+
+        holder.favoriteButton.setOnClickListener(fl);
+
         return convertView;
     }
 
     public static class ViewHolder{
         TextView title;
         ImageView image;
+        ImageView favoriteButton;
         CardView content;
     }
 

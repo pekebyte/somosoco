@@ -105,8 +105,10 @@ public class PostService extends Service {
                     if (response.body().getItems().size() > 0){
                         for (int i=0; i<response.body().getItems().size(); i++){
                             if (!db.checkIfExists(getApplicationContext(),response.body().getItems().get(i))){
+                                if (!db.isDBEmpty(getApplicationContext())){
+                                    notifyUser(response.body().getItems().get(i));
+                                }
                                 db.insertPost(getApplicationContext(),response.body().getItems().get(i));
-                                notifyUser(response.body().getItems().get(i));
                             }
                         }
                     }
@@ -124,7 +126,6 @@ public class PostService extends Service {
     }
 
     private void notifyUser(final Item item){
-        Log.d("aitana war", "lo malo");
         final Context ctx = getApplicationContext();
         NotificationManager notificationManager = (NotificationManager) ctx
                                 .getSystemService(Context.NOTIFICATION_SERVICE);

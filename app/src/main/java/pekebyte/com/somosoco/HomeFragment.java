@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class HomeFragment extends Fragment {
     Context mContext;
     API api;
     String token;
+    SwipeRefreshLayout sr;
 
     ProgressBar progressBar;
 
@@ -83,14 +85,11 @@ public class HomeFragment extends Fragment {
         api = RestAdapter.createAPI();
         token = sharedPreferences.getString("token",null);
 
-        pa = new PostAdapter(mContext, postList);
+        pa = new PostAdapter(mContext, postList, true);
 
         lv.setAdapter(pa);
 
-        progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
 
-        getAllPosts();
-        retrievePosts(true);
         //Start Background service
         Intent service = new Intent(mContext, PostService.class);
         mContext.startService(service);
@@ -113,7 +112,7 @@ public class HomeFragment extends Fragment {
 
         //Swipe refresh
 
-        final SwipeRefreshLayout sr = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        sr = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
 
         sr.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -131,17 +130,27 @@ public class HomeFragment extends Fragment {
                                         db.insertPost(mContext,response.body().getItems().get(i));
                                     }
                                 }
-                                getAllPosts();
-                                sr.setRefreshing(false);
                             }
                         }
+                        getAllPosts();
+                        sr.setRefreshing(false);
                     }
 
                     @Override
                     public void onFailure(Call<OcoPosts> call, Throwable t) {
-
+                        getAllPosts();
+                        sr.setRefreshing(false);
                     }
                 });
+            }
+        });
+
+        sr.post(new Runnable() {
+            @Override
+            public void run() {
+                sr.setRefreshing(true);
+                getAllPosts();
+                retrievePosts(true);
             }
         });
 
@@ -164,24 +173,24 @@ public class HomeFragment extends Fragment {
                     if (response.body().getItems().size() > 0){
                         for (int i=0; i<response.body().getItems().size(); i++){
                             if (!db.checkIfExists(mContext,response.body().getItems().get(i))){
-                                postList.add(response.body().getItems().get(i));
                                 db.insertPost(mContext,response.body().getItems().get(i));
                             }
                         }
                         token = response.body().getNextPageToken();
                         sharedPreferences.edit().putString("token",token).apply();
-                        pa.notifyDataSetChanged();
                     }
                 }
-                if (progressBar.getVisibility() == View.VISIBLE){
-                    progressBar.setVisibility(View.GONE);
+                getAllPosts();
+                if (sr.isRefreshing()){
+                    sr.setRefreshing(false);
                 }
             }
 
             @Override
             public void onFailure(Call<OcoPosts> call, Throwable t) {
-                if (progressBar.getVisibility() == View.VISIBLE){
-                    progressBar.setVisibility(View.GONE);
+                getAllPosts();
+                if (sr.isRefreshing()){
+                    sr.setRefreshing(false);
                 }
             }
         });
@@ -191,6 +200,7 @@ public class HomeFragment extends Fragment {
 
 
     private void getAllPosts(){
+        postList.clear();
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
         Cursor c = ocoDB.rawQuery("SELECT * FROM ocoposts ORDER BY published DESC", null);
         int itemIndex = c.getColumnIndex("item");
@@ -205,8 +215,5 @@ public class HomeFragment extends Fragment {
         c.close();
         ocoDB.close();
         pa.notifyDataSetChanged();
-        if (postList.size() > 0){
-            progressBar.setVisibility(View.GONE);
-        }
     }
 }
