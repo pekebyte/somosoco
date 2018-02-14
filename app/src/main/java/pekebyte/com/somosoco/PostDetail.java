@@ -14,6 +14,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.TypefaceSpan;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import android.webkit.WebView;
 
 import com.google.gson.Gson;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import pekebyte.com.somosoco.Helpers.CustomTypefaceSpan;
@@ -29,6 +31,7 @@ import pekebyte.com.somosoco.Model.Item;
 
 public class PostDetail extends AppCompatActivity {
     Item item;
+    WebView wv;
 
     private ShareActionProvider mShareActionProvider;
 
@@ -47,7 +50,7 @@ public class PostDetail extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setActionBarTitle(item.getTitle());
 
-        WebView wv = (WebView) findViewById(R.id.wv);
+        wv = (WebView) findViewById(R.id.wv);
         wv.setVerticalScrollBarEnabled(true);
         wv.setHorizontalScrollBarEnabled(true);
         wv.getSettings().setJavaScriptEnabled(true);
@@ -126,4 +129,23 @@ public class PostDetail extends AppCompatActivity {
         getSupportActionBar().setTitle(ssb);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            Class.forName("android.webkit.WebView")
+                    .getMethod("onPause", (Class[]) null)
+                    .invoke(wv, (Object[]) null);
+
+            } catch(ClassNotFoundException cnfe) {
+                Log.d("YT err", cnfe.getMessage());
+            } catch(NoSuchMethodException nsme) {
+                Log.d("YT err", nsme.getMessage());
+            } catch(InvocationTargetException ite) {
+                Log.d("YT err", ite.getMessage());
+            } catch (IllegalAccessException iae) {
+                Log.d("YT err", iae.getMessage());
+            }
+
+    }
 }
