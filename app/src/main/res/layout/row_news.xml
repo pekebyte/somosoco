@@ -41,7 +41,7 @@
                         card_view:srcCompat="@drawable/star2" />
                 </RelativeLayout>
 
-                <pekebyte.com.somosoco.Helpers.OcoFont
+                <com.pekebyte.somosoco.helpers.OcoFont
                     android:id="@+id/NoticiaTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
