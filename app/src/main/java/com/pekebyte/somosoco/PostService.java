@@ -35,7 +35,7 @@ import retrofit2.Response;
 
 public class PostService extends Service {
     // constant
-    public static final long INTERVAL = 10 * 1000; // 10 seconds
+    public static final long INTERVAL = 3600 * 1000; // 10 seconds
 
     // run on another Thread to avoid crash
     private Handler mHandler = new Handler();
@@ -77,6 +77,11 @@ public class PostService extends Service {
                 }
             }, 0, INTERVAL);// schedule task
         }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
     }
 
     private void retrievePosts(){
