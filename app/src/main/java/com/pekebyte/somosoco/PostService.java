@@ -19,12 +19,12 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.pekebyte.somosoco.helpers.API;
+import com.pekebyte.somosoco.data.network.Webservice;
 import com.pekebyte.somosoco.helpers.Constants;
 import com.pekebyte.somosoco.helpers.Database;
-import com.pekebyte.somosoco.helpers.RestAdapter;
-import com.pekebyte.somosoco.models.Item;
-import com.pekebyte.somosoco.models.OcoPosts;
+import com.pekebyte.somosoco.data.network.RestAdapter;
+import com.pekebyte.somosoco.data.models.Post;
+import com.pekebyte.somosoco.data.models.OcoPosts;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,7 +42,7 @@ public class PostService extends Service {
     // timer handling
     private Timer mTimer = null;
 
-    API api;
+    Webservice webservice;
 
     Database db;
 
@@ -56,7 +56,7 @@ public class PostService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        api = RestAdapter.createAPI();
+        webservice = RestAdapter.createAPI();
         db = new Database();
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("pekebyte.com.somosoco", MODE_PRIVATE);
@@ -85,18 +85,18 @@ public class PostService extends Service {
     }
 
     private void retrievePosts(){
-        Call<OcoPosts> callbackCall = api.getPosts(Constants.BLOGGER_KEY, null);
+        Call<OcoPosts> callbackCall = webservice.getPosts(Constants.BLOGGER_KEY, null);
         callbackCall.enqueue(new Callback<OcoPosts>() {
             @Override
             public void onResponse(Call<OcoPosts> call, Response<OcoPosts> response) {
                 if (response.isSuccessful()){
-                    if (response.body().getItems().size() > 0){
-                        for (int i=0; i<response.body().getItems().size(); i++){
-                            if (!db.checkIfExists(getApplicationContext(),response.body().getItems().get(i))){
+                    if (response.body().getPosts().size() > 0){
+                        for (int i = 0; i<response.body().getPosts().size(); i++){
+                            if (!db.checkIfExists(getApplicationContext(),response.body().getPosts().get(i))){
                                 if (!db.isDBEmpty(getApplicationContext())){
-                                    notifyUser(response.body().getItems().get(i));
+                                    notifyUser(response.body().getPosts().get(i));
                                 }
-                                db.insertPost(getApplicationContext(),response.body().getItems().get(i));
+                                db.insertPost(getApplicationContext(),response.body().getPosts().get(i));
                             }
                         }
                     }
@@ -113,21 +113,21 @@ public class PostService extends Service {
         });
     }
 
-    private void notifyUser(final Item item){
+    private void notifyUser(final Post post){
         final Context ctx = getApplicationContext();
         NotificationManager notificationManager = (NotificationManager) ctx
                                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent intent = new Intent(ctx, PostDetail.class);
         Gson gson = new Gson();
-        intent.putExtra("item", gson.toJson(item));
+        intent.putExtra("post", gson.toJson(post));
 
         PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         Notification notification = new Notification.Builder(ctx)
                 .setContentTitle(ctx.getResources().getString(R.string.app_name))
-                .setContentText(item.getTitle())
+                .setContentText(post.getTitle())
                 .setSmallIcon(R.drawable.ic_stat_onesignal_default)
                 .build();
 

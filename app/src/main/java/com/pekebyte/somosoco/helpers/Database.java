@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import com.pekebyte.somosoco.models.Item;
+import com.pekebyte.somosoco.data.models.Post;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -24,7 +24,7 @@ public class Database {
         ocoDB.close();
     }
 
-    public Boolean checkIfExists(Context mContext,Item post){
+    public Boolean checkIfExists(Context mContext,Post post){
         Gson gson = new Gson();
         String json = gson.toJson(post);
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
@@ -38,7 +38,7 @@ public class Database {
         return response;
     }
 
-    public void insertPost(Context mContext, Item post){
+    public void insertPost(Context mContext, Post post){
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
         Gson gson = new Gson();
         String json = gson.toJson(post);
@@ -55,7 +55,7 @@ public class Database {
         ocoDB.close();
     }
 
-    public void makeFavorite(Context mContext, Item post, Integer fav){
+    public void makeFavorite(Context mContext, Post post, Integer fav){
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
         Gson gson = new Gson();
         String json = gson.toJson(post);
@@ -68,7 +68,7 @@ public class Database {
         ocoDB.close();
     }
 
-    public Boolean isFavorite(Context mContext, Item post){
+    public Boolean isFavorite(Context mContext, Post post){
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
         Gson gson = new Gson();
         String json = gson.toJson(post);

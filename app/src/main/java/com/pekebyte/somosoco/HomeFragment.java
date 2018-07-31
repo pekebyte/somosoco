@@ -20,12 +20,12 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import com.pekebyte.somosoco.adapters.PostAdapter;
-import com.pekebyte.somosoco.helpers.API;
+import com.pekebyte.somosoco.data.models.Post;
+import com.pekebyte.somosoco.data.network.Webservice;
 import com.pekebyte.somosoco.helpers.Constants;
 import com.pekebyte.somosoco.helpers.Database;
-import com.pekebyte.somosoco.helpers.RestAdapter;
-import com.pekebyte.somosoco.models.Item;
-import com.pekebyte.somosoco.models.OcoPosts;
+import com.pekebyte.somosoco.data.network.RestAdapter;
+import com.pekebyte.somosoco.data.models.OcoPosts;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,11 +34,11 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class HomeFragment extends Fragment {
-    ArrayList<Item> postList = new ArrayList<Item>();
+    ArrayList<Post> postList = new ArrayList<Post>();
     PostAdapter pa;
     String prevPageToken = "";
     Context mContext;
-    API api;
+    Webservice webservice;
     String token;
     SwipeRefreshLayout sr;
 
@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment {
         db.createDB(mContext);
 
 
-        api = RestAdapter.createAPI();
+        webservice = RestAdapter.createAPI();
         token = sharedPreferences.getString("token",null);
 
         pa = new PostAdapter(mContext, postList, true);
@@ -116,17 +116,17 @@ public class HomeFragment extends Fragment {
         sr.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Call<OcoPosts> callbackCall = api.getPosts(Constants.BLOGGER_KEY, null);
+                Call<OcoPosts> callbackCall = webservice.getPosts(Constants.BLOGGER_KEY, null);
 
                 callbackCall.enqueue(new Callback<OcoPosts>() {
                     @Override
                     public void onResponse(Call<OcoPosts> call, Response<OcoPosts> response) {
                         if (response.isSuccessful()){
-                            if (response.body().getItems().size() > 0){
-                                for (int i=0; i<response.body().getItems().size(); i++){
-                                    Item item = response.body().getItems().get(i);
-                                    if (!db.checkIfExists(mContext,response.body().getItems().get(i))){
-                                        db.insertPost(mContext,response.body().getItems().get(i));
+                            if (response.body().getPosts().size() > 0){
+                                for (int i = 0; i<response.body().getPosts().size(); i++){
+                                    Post post = response.body().getPosts().get(i);
+                                    if (!db.checkIfExists(mContext,response.body().getPosts().get(i))){
+                                        db.insertPost(mContext,response.body().getPosts().get(i));
                                     }
                                 }
                             }
@@ -160,19 +160,19 @@ public class HomeFragment extends Fragment {
     private void retrievePosts(Boolean checkLatests){
         Call<OcoPosts> callbackCall = null;
         if (checkLatests == false) {
-            callbackCall = api.getPosts(Constants.BLOGGER_KEY, token);
+            callbackCall = webservice.getPosts(Constants.BLOGGER_KEY, token);
         }
         else{
-            callbackCall = api.getPosts(Constants.BLOGGER_KEY, null);
+            callbackCall = webservice.getPosts(Constants.BLOGGER_KEY, null);
         }
         callbackCall.enqueue(new Callback<OcoPosts>() {
             @Override
             public void onResponse(Call<OcoPosts> call, Response<OcoPosts> response) {
                 if (response.isSuccessful()){
-                    if (response.body().getItems().size() > 0){
-                        for (int i=0; i<response.body().getItems().size(); i++){
-                            if (!db.checkIfExists(mContext,response.body().getItems().get(i))){
-                                db.insertPost(mContext,response.body().getItems().get(i));
+                    if (response.body().getPosts().size() > 0){
+                        for (int i = 0; i<response.body().getPosts().size(); i++){
+                            if (!db.checkIfExists(mContext,response.body().getPosts().get(i))){
+                                db.insertPost(mContext,response.body().getPosts().get(i));
                             }
                         }
                         token = response.body().getNextPageToken();
@@ -202,13 +202,13 @@ public class HomeFragment extends Fragment {
         postList.clear();
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
         Cursor c = ocoDB.rawQuery("SELECT * FROM ocoposts ORDER BY published DESC", null);
-        int itemIndex = c.getColumnIndex("item");
+        int itemIndex = c.getColumnIndex("post");
         Gson gson = new Gson();
         c.moveToFirst();
         while (!c.isAfterLast()) {
             String json = c.getString(itemIndex);
-            Item item = gson.fromJson(json, Item.class);
-            postList.add(item);
+            Post post = gson.fromJson(json, Post.class);
+            postList.add(post);
             c.moveToNext();
         }
         c.close();

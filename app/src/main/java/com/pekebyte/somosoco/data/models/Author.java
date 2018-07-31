@@ -1,4 +1,4 @@
-package com.pekebyte.somosoco.models;
+package com.pekebyte.somosoco.data.models;
 
 /**
  * Created by pedromolina on 2/4/18.

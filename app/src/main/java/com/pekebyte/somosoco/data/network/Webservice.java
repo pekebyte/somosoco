@@ -1,6 +1,6 @@
-package com.pekebyte.somosoco.helpers;
+package com.pekebyte.somosoco.data.network;
 
-import com.pekebyte.somosoco.models.OcoPosts;
+import com.pekebyte.somosoco.data.models.OcoPosts;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -10,7 +10,7 @@ import retrofit2.http.Query;
  * Created by pedromolina on 2/4/18.
  */
 
-public interface API {
+public interface Webservice {
     @Headers("Cache-Control: no-cache")
     @GET("posts")
     Call<OcoPosts> getPosts(

@@ -1,4 +1,4 @@
-package com.pekebyte.somosoco.models;
+package com.pekebyte.somosoco.data.models;
 
 /**
  * Created by pedromolina on 2/4/18.
@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 
-public class Item {
+public class Post {
 
     @SerializedName("kind")
     @Expose

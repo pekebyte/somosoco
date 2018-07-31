@@ -1,4 +1,4 @@
-package com.pekebyte.somosoco.models;
+package com.pekebyte.somosoco.data.models;
 
 /**
  * Created by pedromolina on 2/4/18.
@@ -16,9 +16,9 @@ public class OcoPosts {
     @SerializedName("nextPageToken")
     @Expose
     private String nextPageToken;
-    @SerializedName("items")
+    @SerializedName("posts")
     @Expose
-    private List<Item> items = null;
+    private List<Post> posts = null;
     @SerializedName("etag")
     @Expose
     private String etag;
@@ -39,12 +39,12 @@ public class OcoPosts {
         this.nextPageToken = nextPageToken;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public List<Post> getPosts() {
+        return posts;
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     public String getEtag() {

@@ -20,17 +20,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.pekebyte.somosoco.helpers.Database;
-import com.pekebyte.somosoco.models.Item;
+import com.pekebyte.somosoco.data.models.Post;
 import com.pekebyte.somosoco.PostDetail;
 import com.pekebyte.somosoco.R;
 
-public class PostAdapter extends ArrayAdapter<Item> {
+public class PostAdapter extends ArrayAdapter<Post> {
     private Context mContext;
     private LayoutInflater mInflater;
     private Boolean isHome;
 
-    public PostAdapter(@NonNull Context context,List<Item> items, Boolean isHome) {
-        super(context, R.layout.row_news, items);
+    public PostAdapter(@NonNull Context context, List<Post> posts, Boolean isHome) {
+        super(context, R.layout.row_news, posts);
         mContext = context;
         mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -43,7 +43,7 @@ public class PostAdapter extends ArrayAdapter<Item> {
 
         final ViewHolder holder;
 
-        final Item item = getItem(position);
+        final Post post = getItem(position);
 
         convertView = mInflater.inflate(R.layout.row_news, parent, false);
 
@@ -51,7 +51,7 @@ public class PostAdapter extends ArrayAdapter<Item> {
 
         holder.title = (TextView) convertView.findViewById(R.id.NoticiaTitle);
 
-        holder.title.setText(item.getTitle());
+        holder.title.setText(post.getTitle());
 
         holder.image = (ImageView) convertView.findViewById(R.id.postimage);
 
@@ -60,7 +60,7 @@ public class PostAdapter extends ArrayAdapter<Item> {
         //Favorite Button
         holder.favoriteButton = (ImageView) convertView.findViewById(R.id.favorite);
 
-        String postImage = extractUrls(item.getContent());
+        String postImage = extractUrls(post.getContent());
 
         if (postImage != null){
             Picasso.with(mContext).load(postImage).fit().into(holder.image);
@@ -76,7 +76,7 @@ public class PostAdapter extends ArrayAdapter<Item> {
                 Intent i = new Intent(mContext.getApplicationContext(), PostDetail.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Gson gson = new Gson();
-                i.putExtra("item", gson.toJson(item));
+                i.putExtra("post", gson.toJson(post));
                 mContext.startActivity(i);
             }
         };
@@ -89,21 +89,21 @@ public class PostAdapter extends ArrayAdapter<Item> {
         View.OnClickListener fl = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (db.isFavorite(mContext,item)){
+                if (db.isFavorite(mContext, post)){
                     holder.favoriteButton.setImageResource(R.drawable.star2);
-                    db.makeFavorite(mContext,item,0);
+                    db.makeFavorite(mContext, post,0);
                 }
                 else{
                     holder.favoriteButton.setImageResource(R.drawable.star);
-                    db.makeFavorite(mContext,item,1);
+                    db.makeFavorite(mContext, post,1);
                 }
                 if (!isHome){
-                    remove(item);
+                    remove(post);
                     notifyDataSetChanged();
                 }
             }
         };
-        if (db.isFavorite(mContext,item)){
+        if (db.isFavorite(mContext, post)){
             holder.favoriteButton.setImageResource(R.drawable.star);
 
         }

@@ -1,4 +1,6 @@
-package com.pekebyte.somosoco.helpers;
+package com.pekebyte.somosoco.data.network;
+
+import com.pekebyte.somosoco.helpers.Constants;
 
 import java.util.concurrent.TimeUnit;
 
@@ -15,7 +17,7 @@ public class RestAdapter {
     static Retrofit retrofit;
     static OkHttpClient okHttpClient;
 
-    public static API createAPI() {
+    public static Webservice createAPI() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(5, TimeUnit.SECONDS);
         builder.writeTimeout(10, TimeUnit.SECONDS);
@@ -29,7 +31,7 @@ public class RestAdapter {
                 .client(okHttpClient)
                 .build();
 
-        return retrofit.create(API.class);
+        return retrofit.create(Webservice.class);
     }
 
     public static void cancel(){

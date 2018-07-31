@@ -21,10 +21,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.pekebyte.somosoco.helpers.CustomTypefaceSpan;
-import com.pekebyte.somosoco.models.Item;
+import com.pekebyte.somosoco.data.models.Post;
 
 public class PostDetail extends AppCompatActivity {
-    Item item;
+    Post post;
     WebView wv;
 
     private ShareActionProvider mShareActionProvider;
@@ -37,12 +37,12 @@ public class PostDetail extends AppCompatActivity {
         initActionBar();
 
         Bundle b = getIntent().getExtras();
-        String json = b.getString("item");
+        String json = b.getString("post");
         Gson gson = new Gson();
-        item = gson.fromJson(json, Item.class);
+        post = gson.fromJson(json, Post.class);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setActionBarTitle(item.getTitle());
+        setActionBarTitle(post.getTitle());
 
         wv = (WebView) findViewById(R.id.wv);
         wv.setVerticalScrollBarEnabled(true);
@@ -54,7 +54,7 @@ public class PostDetail extends AppCompatActivity {
         String html = "<!DOCTYPE html><html><head>";
         html += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />";
         html += "<style>img{max-width:100%;width: auto;height: auto;}iframe{max-width:100%;width: auto; height: auto;}</style>";
-        html += "</head><body>"+item.getContent()+"</body></html>";
+        html += "</head><body>"+ post.getContent()+"</body></html>";
 
 
 
@@ -98,7 +98,7 @@ public class PostDetail extends AppCompatActivity {
         // Locate MenuItem with ShareActionProvider
         MenuItem item = menu.findItem(R.id.share);
 
-        /** Getting the actionprovider associated with the menu item whose id is share */
+        /** Getting the actionprovider associated with the menu post whose id is share */
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 
         /** Setting a share intent */
@@ -111,8 +111,8 @@ public class PostDetail extends AppCompatActivity {
     private Intent getDefaultShareIntent(){
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
-        i.putExtra(Intent.EXTRA_TEXT, item.getUrl());
+        i.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
+        i.putExtra(Intent.EXTRA_TEXT, post.getUrl());
         return i;
     }
 

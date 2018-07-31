@@ -16,13 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.pekebyte.somosoco.adapters.PostAdapter;
-import com.pekebyte.somosoco.models.Item;
+import com.pekebyte.somosoco.data.models.Post;
 
 import static android.content.Context.MODE_PRIVATE;
 
 
 public class SavedFragment extends Fragment {
-    List<Item> postList;
+    List<Post> postList;
     PostAdapter pa;
     Context mContext;
 
@@ -52,7 +52,7 @@ public class SavedFragment extends Fragment {
 
         ListView savedPostLists = (ListView) v.findViewById(R.id.savedPostslist);
         savedPostLists.setDivider(null);
-        postList = new ArrayList<Item>();
+        postList = new ArrayList<Post>();
 
         pa = new PostAdapter(container.getContext(),postList,false);
 
@@ -65,13 +65,13 @@ public class SavedFragment extends Fragment {
     private void getAllPosts(){
         SQLiteDatabase ocoDB = mContext.openOrCreateDatabase("somosoco", MODE_PRIVATE, null);
         Cursor c = ocoDB.rawQuery("SELECT * FROM ocoposts WHERE favorite=1 ORDER BY published DESC", null);
-        int itemIndex = c.getColumnIndex("item");
+        int itemIndex = c.getColumnIndex("post");
         Gson gson = new Gson();
         c.moveToFirst();
         while (!c.isAfterLast()) {
             String json = c.getString(itemIndex);
-            Item item = gson.fromJson(json, Item.class);
-            postList.add(item);
+            Post post = gson.fromJson(json, Post.class);
+            postList.add(post);
             c.moveToNext();
         }
         c.close();
