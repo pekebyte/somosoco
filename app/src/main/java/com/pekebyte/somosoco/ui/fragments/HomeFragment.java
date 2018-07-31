@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -149,6 +150,8 @@ public class HomeFragment extends Fragment {
                 });
             }
         });
+
+        Toast.makeText(mContext,"nolada",Toast.LENGTH_LONG).show();
 
         return v;
     }

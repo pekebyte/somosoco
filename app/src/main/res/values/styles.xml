@@ -3,17 +3,17 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <post name="colorPrimary">@color/colorPrimary</post>
-        <post name="colorPrimaryDark">@color/colorPrimaryDark</post>
-        <post name="colorAccent">@color/colorAccent</post>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="DrawerStyle" parent="@style/ThemeOverlay.AppCompat.Light">
-        <post name="colorControlHighlight">@color/colorAccent</post> "
+        <item name="colorControlHighlight">@color/colorAccent</item> "
     </style>
 
     <style name="AppTheme2" parent="AppTheme">
-        <post name="windowNoTitle">true</post>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>
