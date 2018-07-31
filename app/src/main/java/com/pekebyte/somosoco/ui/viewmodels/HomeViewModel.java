@@ -36,12 +36,19 @@ public class HomeViewModel extends ViewModel {
                reqToken = this.token;
         }
         LiveData<OcoPosts> response = this.postRepo.getPosts(reqToken);
-        this.token = response.getValue().getNextPageToken();
-        sharedPreferences.edit().putString("token",this.token).apply();
 
-        for (int i = 0; i<= response.getValue().getPosts().size(); i++){
-            Post post = response.getValue().getPosts().get(i);
-            dao.save(post);
+        if (response.getValue() != null) {
+
+            if (response.getValue().getNextPageToken() != null) {
+                this.token = response.getValue().getNextPageToken();
+                sharedPreferences.edit().putString("token", this.token).apply();
+            }
+
+
+            for (int i = 0; i <= response.getValue().getPosts().size(); i++) {
+                Post post = response.getValue().getPosts().get(i);
+                dao.save(post);
+            }
         }
 
         return dao.getAllPosts();

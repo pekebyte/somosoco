@@ -4,9 +4,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,33 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pekebyte.somosoco.PostService;
 import com.pekebyte.somosoco.R;
-import com.pekebyte.somosoco.data.AppDatabase;
-import com.pekebyte.somosoco.data.dao.PostDao;
 import com.pekebyte.somosoco.data.repository.PostRepository;
 import com.pekebyte.somosoco.ui.adapters.PostAdapter;
 import com.pekebyte.somosoco.data.models.Post;
 import com.pekebyte.somosoco.data.network.Webservice;
-import com.pekebyte.somosoco.ui.helpers.Constants;
-import com.pekebyte.somosoco.ui.helpers.Database;
 import com.pekebyte.somosoco.data.network.RestAdapter;
-import com.pekebyte.somosoco.data.models.OcoPosts;
 import com.pekebyte.somosoco.ui.viewmodels.HomeViewModel;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static android.content.Context.MODE_PRIVATE;
 
 
 public class HomeFragment extends Fragment {
@@ -93,11 +75,6 @@ public class HomeFragment extends Fragment {
         pa = new PostAdapter(mContext, postList, true);
 
         lv.setAdapter(pa);
-
-
-        //Start Background service
-        Intent service = new Intent(mContext, PostService.class);
-        mContext.startService(service);
 
 
         final HomeFragment parent = this;

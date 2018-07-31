@@ -14,7 +14,7 @@ import com.pekebyte.somosoco.data.dao.PostDao;
 import com.pekebyte.somosoco.data.models.Author;
 import com.pekebyte.somosoco.data.models.Post;
 
-@Database(entities = {Post.class}, version = 1)
+@Database(entities = {Post.class}, version = 1, exportSchema = false)
 @TypeConverters({ReplyConverter.class, BlogConverter.class, AuthorConverter.class, TimestampConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 

@@ -36,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
         initLeftMenu();
         nav_view.getMenu().performIdentifierAction(R.id.left_item_home,0);
+
+        Fragment frag = HomeFragment.newInstance();
+        setFragment(frag);
+        setActionBarTitle(getString(R.string.app_name));
     }
 
     private void initLeftMenu() {
@@ -76,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             telegram = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/somosoco"));
                         }
-//                        Intent telegram = new Intent(Intent.ACTION_VIE
                         startActivity(telegram);
                         return false;
                     case R.id.left_item_facebook:
