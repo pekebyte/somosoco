@@ -1,4 +1,4 @@
-package com.pekebyte.somosoco.helpers;
+package com.pekebyte.somosoco.ui.helpers;
 
 import android.content.Context;
 import android.database.Cursor;

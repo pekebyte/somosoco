@@ -1,4 +1,4 @@
-package com.pekebyte.somosoco.helpers;
+package com.pekebyte.somosoco.ui.helpers;
 
 /**
  * Created by pedromolina on 2/4/18.

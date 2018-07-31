@@ -1,4 +1,4 @@
-package com.pekebyte.somosoco.helpers;
+package com.pekebyte.somosoco.ui.helpers;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;

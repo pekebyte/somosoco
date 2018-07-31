@@ -4,11 +4,16 @@ package com.pekebyte.somosoco.data.models;
  * Created by pedromolina on 2/4/18.
  */
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 
+@Entity(tableName = "posts")
 public class Post {
 
     @SerializedName("kind")
@@ -16,6 +21,7 @@ public class Post {
     private String kind;
     @SerializedName("id")
     @Expose
+    @PrimaryKey
     private String id;
     @SerializedName("blog")
     @Expose
@@ -41,6 +47,10 @@ public class Post {
     @SerializedName("content")
     @Expose
     private String content;
+    @SerializedName("isSaved")
+    @Nullable
+    @Expose
+    private Integer isSaved;
     @SerializedName("author")
     @Expose
     private Author author;
@@ -118,6 +128,14 @@ public class Post {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Integer getIsSaved() {
+        return isSaved;
+    }
+
+    public void setIsSaved(int isSaved) {
+        this.isSaved = isSaved;
     }
 
     public String getContent() {

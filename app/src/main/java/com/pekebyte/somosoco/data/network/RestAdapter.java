@@ -1,6 +1,6 @@
 package com.pekebyte.somosoco.data.network;
 
-import com.pekebyte.somosoco.helpers.Constants;
+import com.pekebyte.somosoco.ui.helpers.Constants;
 
 import java.util.concurrent.TimeUnit;
 

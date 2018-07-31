@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.pekebyte.somosoco.MainActivity"
+            android:name="com.pekebyte.somosoco.ui.activities.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme2">
             <intent-filter>
@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.pekebyte.somosoco.PostDetail" />
+        <activity android:name="com.pekebyte.somosoco.ui.activities.PostDetail" />
 
         <service
             android:name="com.pekebyte.somosoco.PostService"

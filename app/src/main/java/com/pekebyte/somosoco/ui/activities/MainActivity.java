@@ -1,4 +1,4 @@
-package com.pekebyte.somosoco;
+package com.pekebyte.somosoco.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -17,7 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import de.cketti.mailto.EmailIntentBuilder;
-import com.pekebyte.somosoco.helpers.CustomTypefaceSpan;
+
+import com.pekebyte.somosoco.R;
+import com.pekebyte.somosoco.ui.helpers.CustomTypefaceSpan;
+import com.pekebyte.somosoco.ui.fragments.HomeFragment;
+import com.pekebyte.somosoco.ui.fragments.SavedFragment;
+import com.pekebyte.somosoco.ui.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity {
 

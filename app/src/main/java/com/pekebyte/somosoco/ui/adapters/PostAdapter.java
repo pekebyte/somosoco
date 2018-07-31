@@ -1,4 +1,4 @@
-package com.pekebyte.somosoco.adapters;
+package com.pekebyte.somosoco.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.pekebyte.somosoco.helpers.Database;
+import com.pekebyte.somosoco.ui.helpers.Database;
 import com.pekebyte.somosoco.data.models.Post;
-import com.pekebyte.somosoco.PostDetail;
+import com.pekebyte.somosoco.ui.activities.PostDetail;
 import com.pekebyte.somosoco.R;
 
 public class PostAdapter extends ArrayAdapter<Post> {

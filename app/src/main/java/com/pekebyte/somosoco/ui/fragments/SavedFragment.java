@@ -1,4 +1,4 @@
-package com.pekebyte.somosoco;
+package com.pekebyte.somosoco.ui.fragments;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -15,7 +15,8 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pekebyte.somosoco.adapters.PostAdapter;
+import com.pekebyte.somosoco.R;
+import com.pekebyte.somosoco.ui.adapters.PostAdapter;
 import com.pekebyte.somosoco.data.models.Post;
 
 import static android.content.Context.MODE_PRIVATE;

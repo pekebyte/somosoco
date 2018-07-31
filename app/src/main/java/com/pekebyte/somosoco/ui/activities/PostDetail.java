@@ -1,4 +1,4 @@
-package com.pekebyte.somosoco;
+package com.pekebyte.somosoco.ui.activities;
 
 import android.app.ActivityManager;
 import android.content.Intent;
@@ -20,7 +20,8 @@ import com.google.gson.Gson;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import com.pekebyte.somosoco.helpers.CustomTypefaceSpan;
+import com.pekebyte.somosoco.R;
+import com.pekebyte.somosoco.ui.helpers.CustomTypefaceSpan;
 import com.pekebyte.somosoco.data.models.Post;
 
 public class PostDetail extends AppCompatActivity {

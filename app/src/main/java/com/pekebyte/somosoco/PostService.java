@@ -20,11 +20,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.pekebyte.somosoco.data.network.Webservice;
-import com.pekebyte.somosoco.helpers.Constants;
-import com.pekebyte.somosoco.helpers.Database;
+import com.pekebyte.somosoco.ui.helpers.Constants;
+import com.pekebyte.somosoco.ui.helpers.Database;
 import com.pekebyte.somosoco.data.network.RestAdapter;
 import com.pekebyte.somosoco.data.models.Post;
 import com.pekebyte.somosoco.data.models.OcoPosts;
+import com.pekebyte.somosoco.ui.activities.PostDetail;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,7 +61,7 @@ public class PostService extends Service {
         webservice = RestAdapter.createAPI();
         db = new Database();
 
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("pekebyte.com.somosoco", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.pekebyte.somosoco", MODE_PRIVATE);
         Boolean notificationsEnabled = sharedPreferences.getBoolean("notificationsEnabled",true);
         if (notificationsEnabled == true) {
             if (mTimer != null)
@@ -73,7 +75,7 @@ public class PostService extends Service {
                 @Override
                 public void run() {
                     Log.d("holi", "work");
-                    retrievePosts();
+//                    retrievePosts();
                 }
             }, 0, INTERVAL);// schedule task
         }
