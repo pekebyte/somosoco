@@ -16,7 +16,7 @@ public class OcoPosts {
     @SerializedName("nextPageToken")
     @Expose
     private String nextPageToken;
-    @SerializedName("posts")
+    @SerializedName("items")
     @Expose
     private List<Post> posts = null;
     @SerializedName("etag")

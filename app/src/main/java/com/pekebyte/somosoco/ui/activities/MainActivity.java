@@ -36,10 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
         initLeftMenu();
         nav_view.getMenu().performIdentifierAction(R.id.left_item_home,0);
-
-        Fragment frag = HomeFragment.newInstance();
-        setFragment(frag);
-        setActionBarTitle(getString(R.string.app_name));
     }
 
     private void initLeftMenu() {
@@ -118,8 +114,6 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-
 
     }
 

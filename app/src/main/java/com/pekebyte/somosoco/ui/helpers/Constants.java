@@ -5,8 +5,8 @@ package com.pekebyte.somosoco.ui.helpers;
  */
 
 public class Constants {
-    public static String BLOGGER_KEY = "AIzaSyCBJJE-cPAABPrTc3Xfk_h9aJHbFZX41do";
-    public static String BLOGGER_ID = "8151466934683099536";
+    public static String BLOGGER_KEY = "BLOGGER KEY";
+    public static String BLOGGER_ID = "BLOGGER ID";
     public static String BASE_URL = "https://www.googleapis.com/blogger/v3/blogs/"+BLOGGER_ID+"/";
 
 }
