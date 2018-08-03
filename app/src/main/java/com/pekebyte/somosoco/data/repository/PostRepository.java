@@ -23,15 +23,13 @@ public class PostRepository {
         this.webservice = webservice;
     }
 
-    public LiveData<OcoPosts> getPosts(String token) {
-        final MutableLiveData<OcoPosts> data = new MutableLiveData<>();
-        Log.d("start networking", "holi");
+    public LiveData<List<Post>> getHomePosts(String token) {
+        final MutableLiveData<List<Post>> data = new MutableLiveData<>();
         webservice.getPosts(Constants.BLOGGER_KEY,token).enqueue(new Callback<OcoPosts>() {
             @Override
             public void onResponse(Call<OcoPosts> call, Response<OcoPosts> response) {
                 if (response.isSuccessful()){
-                    data.setValue(response.body());
-                    Log.d("Finally", "okurrr");
+                    data.setValue(response.body().getPosts());
                 }else{
                     try {
                         Log.d("error networking", response.errorBody().string());

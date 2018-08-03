@@ -15,6 +15,7 @@ import com.pekebyte.somosoco.data.models.Post;
 import com.pekebyte.somosoco.data.repository.PostRepository;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -25,13 +26,34 @@ public class HomeViewModel extends ViewModel {
     private SharedPreferences sharedPreferences;
     private PostDao dao;
     private Context ctx;
+    private Executor executor;
 
-    public void init(Context ctx, PostRepository postRepo) {
+    public void init(Context ctx, PostRepository postRepo, Executor executor) {
         this.postRepo = postRepo;
         this.ctx = ctx;
         sharedPreferences = ctx.getSharedPreferences("com.pekebyte.somosoco", MODE_PRIVATE);
         this.token = sharedPreferences.getString("token",null);
         this.dao = AppDatabase.getDatabase(ctx).postDao();
+        this.executor = executor;
+    }
+
+    public LiveData<List<Post>> getPosts(Boolean latest){
+        final MutableLiveData<List<Post>> data = new MutableLiveData<>();
+
+        String reqToken =  null;
+        if (latest == false) {
+               reqToken = this.token;
+        }
+        LiveData<List<Post>> response = this.postRepo.getPosts(reqToken);
+
+
+
+        return data;
+    }
+
+    private void retrievePosts(Boolean latest){
+
+        this.postRepo.getPosts(null).
     }
 
 //    public LiveData<List<Post>> getPosts(Boolean latest) {
@@ -39,7 +61,7 @@ public class HomeViewModel extends ViewModel {
 //        if (latest == false) {
 //               reqToken = this.token;
 //        }
-//        LiveData<OcoPosts> response = this.postRepo.getPosts(reqToken);
+//        LiveData<List<Posts>> response = this.postRepo.getPosts(reqToken).getValue().getPosts();
 //
 //        if (response != null) {
 //
@@ -64,8 +86,4 @@ public class HomeViewModel extends ViewModel {
 //        return dao.getAllPosts();
 //    }
 
-    public LiveData<OcoPosts> getPosts()
-    {
-        return this.postRepo.getPosts(null);
-    }
 }

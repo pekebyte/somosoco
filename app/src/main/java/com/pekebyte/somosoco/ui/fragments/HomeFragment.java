@@ -1,5 +1,6 @@
 package com.pekebyte.somosoco.ui.fragments;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -81,8 +82,6 @@ public class HomeFragment extends Fragment {
         lv.setAdapter(pa);
 
 
-        final HomeFragment parent = this;
-
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -91,16 +90,15 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (view.getAdapter().getCount() > 0){
-                    viewModel.getPosts().observe(parent, new Observer<OcoPosts>() {
-                        @Override
-                        public void onChanged(@Nullable OcoPosts ocoPosts) {
-                            updatePosts(ocoPosts.getPosts());
-                        }
-                    });
+                if (view.getAdapter().getCount() > 0) {
+                    if (view.getLastVisiblePosition() == view.getAdapter().getCount() - 1 && view.getChildAt(view.getChildCount() - 1).getBottom() <= view.getHeight()) {
+                        sendRequest();
+                    }
                 }
             }
         });
+
+
 
         //Swipe refresh
 
@@ -109,13 +107,7 @@ public class HomeFragment extends Fragment {
         sr.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                viewModel.getPosts().observe(parent, new Observer<OcoPosts>() {
-                    @Override
-                    public void onChanged(@Nullable OcoPosts ocoPosts) {
-                        updatePosts(ocoPosts.getPosts());
-                        sr.setRefreshing(false);
-                    }
-                });
+                sendRequest();
             }
         });
 
@@ -123,16 +115,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void run() {
                 sr.setRefreshing(true);
-                viewModel.getPosts().observe(parent, new Observer<OcoPosts>() {
-                    @Override
-                    public void onChanged(@Nullable OcoPosts ocoPosts) {
-                        if (ocoPosts.getPosts() != null) {
-                            Log.d("La dio demasiado","yaaaass");
-                            updatePosts(ocoPosts.getPosts());
-                        }
-                        sr.setRefreshing(false);
-                    }
-                });
+                sendRequest();
             }
         });
 
@@ -141,10 +124,30 @@ public class HomeFragment extends Fragment {
         return v;
     }
 
+    public void sendRequest()
+    {
+
+        Observer<OcoPosts> observer = new Observer<OcoPosts>() {
+            @Override
+            public void onChanged(@Nullable OcoPosts ocoPosts) {
+                if (ocoPosts.getPosts() != null) {
+                    updatePosts(ocoPosts.getPosts());
+                }
+                sr.setRefreshing(false);
+                viewModel.getPosts().removeObserver(this);
+            }
+        };
+
+        viewModel.getPosts().observe(this, observer);
+
+    }
+
     public void updatePosts(List<Post> posts){
         this.postList = posts;
         pa = new PostAdapter(mContext, postList, true);
         lv.setAdapter(pa);
     }
+
+
 
 }
