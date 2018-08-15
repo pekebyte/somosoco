@@ -23,6 +23,7 @@ import com.pekebyte.somosoco.ui.helpers.CustomTypefaceSpan;
 import com.pekebyte.somosoco.ui.fragments.HomeFragment;
 import com.pekebyte.somosoco.ui.fragments.SavedFragment;
 import com.pekebyte.somosoco.ui.fragments.SettingsFragment;
+import com.pekebyte.somosoco.ui.services.PostService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
         initLeftMenu();
         nav_view.getMenu().performIdentifierAction(R.id.left_item_home,0);
+
+        //Start Background service
+        Intent service = new Intent(this, PostService.class);
+        this.startService(service);
     }
 
     private void initLeftMenu() {

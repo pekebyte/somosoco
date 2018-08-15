@@ -1,30 +1,21 @@
 package com.pekebyte.somosoco.ui.services;
 
-import android.app.Service;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LifecycleService;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.pekebyte.somosoco.R;
 import com.pekebyte.somosoco.data.AppDatabase;
@@ -34,14 +25,11 @@ import com.pekebyte.somosoco.data.models.Post;
 import com.pekebyte.somosoco.data.network.RestAdapter;
 import com.pekebyte.somosoco.data.repository.PostRepository;
 import com.pekebyte.somosoco.ui.activities.PostDetail;
-import com.pekebyte.somosoco.ui.viewmodels.SavedViewModel;
-import com.pekebyte.somosoco.ui.viewmodels.ServiceViewModel;
 
 /**
  * Created by pedromolina on 2/4/18.
  */
-
-public class PostService extends Service implements LifecycleOwner {
+public class PostService extends LifecycleService {
     // constant
     public static final long INTERVAL = 3600 * 1000; // 1 hour
 
@@ -49,13 +37,13 @@ public class PostService extends Service implements LifecycleOwner {
     private Handler mHandler = new Handler();
     // timer handling
     private Timer mTimer = null;
-    private ServiceViewModel viewModel;
     private PostRepository postRepo;
     private PostDao dao;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        super.onBind(intent);
         return null;
     }
 
@@ -86,7 +74,9 @@ public class PostService extends Service implements LifecycleOwner {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        super.onStartCommand(intent,flags,startId);
         return START_STICKY;
     }
 
@@ -134,9 +124,4 @@ public class PostService extends Service implements LifecycleOwner {
 
     }
 
-    @NonNull
-    @Override
-    public Lifecycle getLifecycle() {
-        return null;
-    }
 }
