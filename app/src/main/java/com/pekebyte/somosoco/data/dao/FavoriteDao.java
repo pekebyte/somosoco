@@ -9,6 +9,8 @@ import android.arch.persistence.room.Query;
 import com.pekebyte.somosoco.data.models.Favorite;
 import com.pekebyte.somosoco.data.models.Post;
 
+import java.util.List;
+
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
 @Dao
@@ -20,7 +22,7 @@ public interface FavoriteDao {
     void delete(Favorite favorite);
 
     @Query("SELECT posts.* FROM posts,favorites WHERE posts.id = favorites.id ORDER BY posts.updated DESC")
-    LiveData<Post> getFavorites();
+    LiveData<List<Post>> getFavorites();
 
     @Query("SELECT COUNT(id) FROM favorites WHERE id = :postId")
     int existInFavorite(String postId);
