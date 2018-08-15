@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.pekebyte.somosoco.ui.helpers.Database;
 import com.pekebyte.somosoco.data.models.Post;
 import com.pekebyte.somosoco.ui.activities.PostDetail;
 import com.pekebyte.somosoco.R;
@@ -88,7 +87,6 @@ public class PostAdapter extends ArrayAdapter<Post> {
         holder.content.setOnClickListener(listener);
 
         //Favorite Button
-        final Database db = new Database();
 
         View.OnClickListener fl = new View.OnClickListener() {
             @Override
