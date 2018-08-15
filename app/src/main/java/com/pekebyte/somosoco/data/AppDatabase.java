@@ -10,11 +10,13 @@ import com.pekebyte.somosoco.data.converters.AuthorConverter;
 import com.pekebyte.somosoco.data.converters.BlogConverter;
 import com.pekebyte.somosoco.data.converters.ReplyConverter;
 import com.pekebyte.somosoco.data.converters.TimestampConverter;
+import com.pekebyte.somosoco.data.dao.FavoriteDao;
 import com.pekebyte.somosoco.data.dao.PostDao;
 import com.pekebyte.somosoco.data.models.Author;
+import com.pekebyte.somosoco.data.models.Favorite;
 import com.pekebyte.somosoco.data.models.Post;
 
-@Database(entities = {Post.class}, version = 1, exportSchema = false)
+@Database(entities = {Post.class, Favorite.class}, version = 1, exportSchema = false)
 @TypeConverters({ReplyConverter.class, BlogConverter.class, AuthorConverter.class, TimestampConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -31,4 +33,5 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract PostDao postDao();
+    public abstract FavoriteDao favoriteDao();
 }

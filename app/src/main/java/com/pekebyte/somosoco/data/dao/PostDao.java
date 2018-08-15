@@ -20,7 +20,7 @@ public interface PostDao {
     LiveData<Post> loadPost(String postId);
 
     //Get All Users
-    @Query("SELECT * FROM posts")
+    @Query("SELECT * FROM posts ORDER BY updated DESC")
     LiveData<List<Post>> getAllPosts();
 
 }

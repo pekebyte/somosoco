@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (view.getAdapter().getCount() > 0) {
                     if (view.getLastVisiblePosition() == view.getAdapter().getCount() - 1 && view.getChildAt(view.getChildCount() - 1).getBottom() <= view.getHeight()) {
-                        sendRequest();
+                        sendRequest(false);
                     }
                 }
             }
@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment {
         sr.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                sendRequest();
+                sendRequest(true);
             }
         });
 
@@ -115,37 +115,35 @@ public class HomeFragment extends Fragment {
             @Override
             public void run() {
                 sr.setRefreshing(true);
-                sendRequest();
+                sendRequest(true);
             }
         });
-
-        Toast.makeText(mContext,"nolada",Toast.LENGTH_LONG).show();
 
         return v;
     }
 
-    public void sendRequest()
+    public void sendRequest(Boolean latest)
     {
-
-        Observer<OcoPosts> observer = new Observer<OcoPosts>() {
+        Log.d("sendRequest", latest.toString());
+        Observer<List<Post>> observer = new Observer<List<Post>>() {
             @Override
-            public void onChanged(@Nullable OcoPosts ocoPosts) {
-                if (ocoPosts.getPosts() != null) {
-                    updatePosts(ocoPosts.getPosts());
+            public void onChanged(@Nullable List<Post> posts) {
+                if (posts.size() > 0) {
+                    updatePosts(posts);
                 }
                 sr.setRefreshing(false);
-                viewModel.getPosts().removeObserver(this);
+                viewModel.getPosts(latest).removeObserver(this);
             }
         };
 
-        viewModel.getPosts().observe(this, observer);
+        viewModel.getPosts(latest).observe(this, observer);
 
     }
 
     public void updatePosts(List<Post> posts){
-        this.postList = posts;
-        pa = new PostAdapter(mContext, postList, true);
-        lv.setAdapter(pa);
+        this.postList.clear();
+        this.postList.addAll(posts);
+        pa.notifyDataSetChanged();
     }
 
 

@@ -13,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.pekebyte.somosoco.data.AppDatabase;
+import com.pekebyte.somosoco.data.dao.FavoriteDao;
+import com.pekebyte.somosoco.data.models.Favorite;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -28,13 +31,14 @@ public class PostAdapter extends ArrayAdapter<Post> {
     private Context mContext;
     private LayoutInflater mInflater;
     private Boolean isHome;
-
+    private FavoriteDao dao;
     public PostAdapter(@NonNull Context context, List<Post> posts, Boolean isHome) {
         super(context, R.layout.row_news, posts);
         mContext = context;
         mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.isHome = isHome;
+        this.dao = AppDatabase.getDatabase(mContext).favoriteDao();
     }
 
     @NonNull
@@ -89,21 +93,27 @@ public class PostAdapter extends ArrayAdapter<Post> {
         View.OnClickListener fl = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (db.isFavorite(mContext, post)){
+                if (dao.existInFavorite(post.getId()) > 0){
                     holder.favoriteButton.setImageResource(R.drawable.star2);
-                    db.makeFavorite(mContext, post,0);
+                    Favorite fav = new Favorite();
+                    fav.setId(post.getId());
+                    dao.delete(fav);
+
+                    if (!isHome){
+                        remove(post);
+                        notifyDataSetChanged();
+                    }
                 }
                 else{
                     holder.favoriteButton.setImageResource(R.drawable.star);
-                    db.makeFavorite(mContext, post,1);
+                    Favorite fav = new Favorite();
+                    fav.setId(post.getId());
+                    dao.save(fav);
                 }
-                if (!isHome){
-                    remove(post);
-                    notifyDataSetChanged();
-                }
+
             }
         };
-        if (db.isFavorite(mContext, post)){
+        if (dao.existInFavorite(post.getId()) > 0){
             holder.favoriteButton.setImageResource(R.drawable.star);
 
         }
