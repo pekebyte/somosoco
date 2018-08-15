@@ -23,7 +23,10 @@
             </intent-filter>
         </activity>
         <activity android:name="com.pekebyte.somosoco.ui.activities.PostDetail" />
-
+        <service
+            android:name="com.pekebyte.somosoco.ui.services.PostService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

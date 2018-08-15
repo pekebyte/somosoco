@@ -23,4 +23,7 @@ public interface PostDao {
     @Query("SELECT * FROM posts ORDER BY updated DESC")
     LiveData<List<Post>> getAllPosts();
 
+    @Query("SELECT COUNT(id) FROM posts WHERE id = :postId")
+    int exists(String postId);
+
 }

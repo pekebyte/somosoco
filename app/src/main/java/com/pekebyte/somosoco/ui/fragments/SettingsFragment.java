@@ -39,7 +39,7 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        sharedPreferences = container.getContext().getSharedPreferences("pekebyte.com.somosoco", MODE_PRIVATE);
+        sharedPreferences = container.getContext().getSharedPreferences("com.pekebyte.somosoco", MODE_PRIVATE);
 
         isChecked = sharedPreferences.getBoolean("notificationsEnabled",true);
 
