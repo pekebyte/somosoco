@@ -35,4 +35,18 @@ platform :android do
     gradle(task: "clean assembleRelease")
     upload_to_play_store
   end
+
+  lane :screenshots do
+    capture_android_screenshots
+    upload_to_play_store
+  end
+
+  lane :playstore do
+    gradle(
+      task: 'assemble',
+      build_type: 'Release'
+    )
+    upload_to_play_store # Uploads the APK built in the gradle step above
+  end
+
 end
