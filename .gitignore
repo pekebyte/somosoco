@@ -56,3 +56,10 @@ freeline_project_description.json
 
 #Constants file
 app/src/main/java/com/pekebyte/somosoco/ui/helpers/Constants.java
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+fastlane/readme.md
