@@ -44,7 +44,13 @@ platform :android do
   lane :playstore do
     gradle(
       task: 'assemble',
-      build_type: 'Release'
+      build_type: 'Release',
+      properties: {
+        "android.injected.signing.store.file" => "keystore.jks",
+        "android.injected.signing.store.password" => "mypassword",
+        "android.injected.signing.key.alias" => "keystore_alias",
+        "android.injected.signing.key.password" => "mypassword",
+      }
     )
     upload_to_play_store # Uploads the APK built in the gradle step above
   end
