@@ -120,7 +120,10 @@ public class PostService extends LifecycleService {
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
         notification.contentIntent = pIntent;
-        notificationManager.notify(Integer.parseInt(item.getId()), notification);
+
+        Integer nId = Integer.parseInt(item.getId().substring(0,4));
+
+        notificationManager.notify(nId, notification);
 
     }
 
