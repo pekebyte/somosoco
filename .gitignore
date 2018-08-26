@@ -54,8 +54,6 @@ freeline_project_description.json
 
 .DS_Store
 
-#Constants file
-app/src/main/java/com/pekebyte/somosoco/ui/helpers/Constants.java
 
 # fastlane
 fastlane/report.xml
